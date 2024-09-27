@@ -1,0 +1,41 @@
+---
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: stubhub
+build:
+  local:
+    push: false                             # (default) don't push to dockerHub
+  artifacts:
+    - image: javascriptforeverything/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:                                 # Don't make any change to image, instead put files directly into pod
+        manual:
+          - src: 'src/**/*.ts'              # Take all those files 
+            dest: .                         # put here
+manifests:
+  rawYaml:
+    - infra/k8s/*
+
+# ---
+# apiVersion: skaffold/v2alpha3
+# kind: Config
+# deploy:
+#   kubectl:
+#     manifests:
+#       - ./infra/k8s/*
+# build:
+#   local:
+#     push: false                             # (default) don't push to dockerHub
+#   artifacts:
+#     - context: ./auth                       # will be apply for /auth dir = auth project
+#       image: javascriptforeverything/auth
+#       docker:
+#         dockerfile: Dockerfile
+#       sync:                                 # Sync all file 
+#         manual:
+#           - src: 'src/**/*.ts'              # Take all those files 
+#             dest: .                         # put here
+...

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: volume-container
+      image: nginx:latest
+      imagePullPolicy: IfNotPresent     # <-- Add this line
+      ports:
+        - name: nginx-web-port
+          containerPort: 80
+
+    - name: env-container
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      command: ['sh', '-c', 'while true; do echo "hellow"; sleep 3; done']
+
+  restartPolicy: Always

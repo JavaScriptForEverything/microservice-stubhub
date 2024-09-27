@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+  labels:
+    volume: nfs-volume
+
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.49.2                      # Server IP: $ minikube ip
+    path: /srv/nfs/kubedata                   # nfs mount port of server
+  persistentVolumeReclaimPolicy: Retain

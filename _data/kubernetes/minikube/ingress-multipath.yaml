@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-multi-path
+spec:
+  ingressClassName: default
+  rules:
+  - host: mydomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix          # Prefix = /*
+        backend:
+          service:
+            name: my-deploy-svc
+            port:
+              # name: port-name
+              number: 80
+
+      - path: /admin/
+        pathType: Exact           # Exact = /admin    [ not /admin/* ]
+        backend:
+          service:
+            name: my-deploy-svc
+            port:
+              # name: portadmin
+              number: 8080

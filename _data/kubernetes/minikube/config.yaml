@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  myconfig.conf: |2
+
+    name=riajul
+    age=29
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: mymap

@@ -1,0 +1,28 @@
+---
+### For Ingress
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+    - containerPort: 80    # Ingress controller listens on 80
+      hostPort: 80         # Expose on host port 80
+      protocol: TCP
+    - containerPort: 443   # For HTTPS if needed
+      hostPort: 443        # Expose on host port 443
+      protocol: TCP
+
+  - role: worker
+  - role: worker
+
+### For NodePort
+# kind: Cluster
+# apiVersion: kind.x-k8s.io/v1alpha4
+# nodes:
+#   - role: control-plane
+#     extraPortMappings:
+#       - containerPort: 30007  # (NodePort) Docker
+#         hostPort: 8080        # Host port you want to access the service with
+#         protocol: TCP
+#   - role: worker
+#   - role: worker

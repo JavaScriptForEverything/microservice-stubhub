@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-label                # (2) Target Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: nginx-label              # (1) Set a label to pod so that Deployment and Service can target this Pod
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeport-svg-my-deployment
+spec:
+  type: NodePort                   # Ingress works on internal ClusterIP type [ not, in NodePort, or LoadBalancer ]
+  selector:
+    app: nginx-label                # (3) matches the Deployment pod label, to apply this service on that
+  ports:
+    - port: 80                      # Service's VIP port
+      targetPort: 80                # Container's application running port (nginx: 80)
+      nodePort: 30007               # Kind Cluster nodePort, which mapped with hostPort: 8080
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-multi-path
+#   # annotations:
+#     # nginx.ingress.kubernetes.io/rewrite-target: /   # (4) To redirect ingress requests to   / path
+# spec:
+#   ingressClassName: nginx                           # Specify the ingress class
+#   rules:
+#   - host: mydomain.com                              # Make sure this resolves to your Minikube IP
+#     http:
+#       paths:
+#       - path: /                                     # all the request comes to that path
+#         pathType: Prefix                            # Prefix === /*   match for all paths
+#         backend:
+#           service:
+#             name: node-port-service-for-deployment  # (5) Target Service, to apply ingress on it
+#             port:
+#               number: 80
+

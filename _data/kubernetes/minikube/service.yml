@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-port-service-for-deployment
+spec:
+  type: NodePort            # Expose all Nodes Port for outside (for PAT)
+  selector:
+    app: nginx-label        # it is deployment pod label
+  ports:
+    - port: 80              # Service's VIP port
+      targetPort: 80        # Container's application running port (nginx: 80)

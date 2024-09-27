@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hostpath-pvc
+spec:
+  selector:                   # Target pv by selector
+    matchLabels:
+      volume: hostpath-volume
+
+  accessModes:                # match permissions
+    - ReadWriteOnce
+  resources:                  # set limits how much you want to use
+    requests:
+      storage: 1Gi

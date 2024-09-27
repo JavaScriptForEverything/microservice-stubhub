@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-ns-quota
+  namespace: dev                  # which namespace that will apply
+spec:
+  hard:
+    limits.cpu: "2"               # Maximum CPU limit for all containers in dev namespace
+    limits.memory: "2Gi"          # Maximum memory limits for all containers in dev namespace
+
+    requests.cpu: "750m"           # Maximum CPU limit for a single pod: 750 mini
+    requests.memory: "512Mi"      # Maximum memory requests from a single pod: 200m
+
+    pods: "10"                    # Maximum 10 pods
+    services: "5"                 # Maximum 5 services
+    persistentvolumeclaims: "3"   # Maximum 3 PersistentVolumeClaims
+...

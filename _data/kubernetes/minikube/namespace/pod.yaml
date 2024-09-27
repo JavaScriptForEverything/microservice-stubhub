@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: my-container
+      image: nginx:latest
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: nginx-web-port
+          containerPort: 80
+
+      resources:
+        limits:
+          cpu: "1"          # Use "m" for millicores (0.75 CPU)
+          memory: "512Mi"   # Memory value should be "Mi" or "Gi"
+
+        requests:
+          cpu: "750m"       # Use "m" for millicores (0.75 CPU)
+          memory: "512Mi"   # Memory value should be "Mi" or "Gi"

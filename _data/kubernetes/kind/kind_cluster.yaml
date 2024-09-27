@@ -1,0 +1,11 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: mycluster
+nodes:
+  - role: control-plane                 # Master Node
+    extraPortMappings:                  # For ClusterIP
+      - containerPort: 30001            # Master Node is Container for kind Cluster
+        hostPort: 30001                 # Map this port on localhost 30001
+        protocol: TCP
+  - role: worker
+  - role: worker

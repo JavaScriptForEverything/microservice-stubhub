@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth                   # (2) select Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: auth                 # (1) Add label to pod
+    spec:
+      containers:
+        - name: auth
+          image: javascriptforeverything/auth:latest
+          # imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000   # App running on this port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: auth                     # (3) target pod to apply service
+  ports:
+  - name: 5000-5000
+    targetPort: 5000              # (4) map container pod
+    port: 5000                    # (5) with Cluster node port 
+    protocol: TCP
+...
