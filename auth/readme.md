@@ -136,28 +136,35 @@ spec:
 ### Create skaffold config file
 
 ```
-$ skaffold init  			# Generate bellow output
+$ skaffold init  			        # Generate bellow output
 ...
 ```
 
 #### /skaffold.yaml
 ```
-...
+---
 apiVersion: skaffold/v4beta11
 kind: Config
 metadata:
   name: stubhub
-build:
-  local:
-    push: false                                 # (default) don't push to dockerHub
-  artifacts:
-    - context: auth 			        # Apply for directory auth 
-      image: javascriptforeverything/auth
-      docker:
-        dockerfile: Dockerfile
+
 manifests:
   rawYaml:
     - infra/k8s/*
+
+build:
+  local:
+    push: false                                 # (default) don't push to dockerHub
+    useBuildkit: true                           # To build image lot faster, so must use it
+  artifacts:
+    - image: javascriptforeverything/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:                                     # Instead of it, build entire image on every change, now only change updated files
+        manual:
+          - src: 'src/**/*.ts'                  # Take all those files 
+            dest: .                             # put here
 
 # ---
 # apiVersion: skaffold/v2alpha3
@@ -223,6 +230,9 @@ spec:
             port:
               number: 5000              # app running on container and also service mapped to 5000
 ...
+
+$ skaffold dev 		                                # Run skafold in development mode
+$ skaffold dev -v debug                                 # for more details in debug more
 
 Browser: http://mydomain.com/api/users/me 		# => { ... }
 ```

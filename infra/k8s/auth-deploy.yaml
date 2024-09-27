@@ -16,7 +16,7 @@ spec:
       containers:
         - name: auth
           image: javascriptforeverything/auth:latest
-          # imagePullPolicy: IfNotPresent
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000   # App running on this port
 ---

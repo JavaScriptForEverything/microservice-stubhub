@@ -3,21 +3,24 @@ apiVersion: skaffold/v4beta11
 kind: Config
 metadata:
   name: stubhub
+
+manifests:
+  rawYaml:
+    - infra/k8s/*
+
 build:
   local:
     push: false                             # (default) don't push to dockerHub
+    useBuildkit: true                       # To build image lot faster, so must use it
   artifacts:
     - image: javascriptforeverything/auth
       context: auth
       docker:
         dockerfile: Dockerfile
-      sync:                                 # Don't make any change to image, instead put files directly into pod
+      sync:                                 # Instead of it, build entire image on every change, now only change updated files
         manual:
           - src: 'src/**/*.ts'              # Take all those files 
             dest: .                         # put here
-manifests:
-  rawYaml:
-    - infra/k8s/*
 
 # ---
 # apiVersion: skaffold/v2alpha3
