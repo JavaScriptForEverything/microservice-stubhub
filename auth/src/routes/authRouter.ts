@@ -4,7 +4,7 @@ import * as autherController from '../controllers/authController'
 // /api/users
 export const router = Router()
 
-router.get('/me', autherController.getLogedInUser, autherController.getUserById)
+router.get('/me', autherController.protect, autherController.getLogedInUser, autherController.getUserById)
 router.post('/register', autherController.createUser)
 router.post('/login', autherController.login)
 router.post('/logout', autherController.logout)

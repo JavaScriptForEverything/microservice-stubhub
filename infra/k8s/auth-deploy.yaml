@@ -18,7 +18,16 @@ spec:
           image: javascriptforeverything/auth:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 5000   # App running on this port
+            - containerPort: 5000       # App running on this port
+          env:
+            - name: MONGO_HOST          # this name will be used to access: process.env.MONGO_HOST
+              value: auth-mongo-svc     # MONGO_HOST=mongodb://localhost:27017 => mongo service name
+
+            - name: JWT_AUTH_TOKEN_SECRET   
+              valueFrom:
+                secretKeyRef: 
+                  name: jwt-secret            # kubectl create secret generic jwt-secret --from-literal=JWT_AUTH_TOKEN_SECRET='...'
+                  key: JWT_AUTH_TOKEN_SECRET  # get value store in JWT_AUTH_TOKEN_SECRET, from 'jwt-secret' name
 ---
 apiVersion: v1
 kind: Service

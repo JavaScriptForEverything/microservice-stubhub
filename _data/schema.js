@@ -34,5 +34,3 @@ const charge = {
 	stripeId: '', 			// => string
 	stripeRefundId: '', // => string
 }
-
-

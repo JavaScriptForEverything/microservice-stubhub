@@ -1,18 +1,19 @@
 import type { Document, Model} from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
+import * as bcryptjs from 'bcryptjs'
 
 type UserDocument = Document & {
 	name: string
 	email: string
 	password: string
-	confirmPassword: string
+	confirmPassword: string | undefined
 
-	comparePassword: () => boolean 								// .methods.func = () => {} inside Document
+	comparePassword: (password: string) => boolean 								// .methods.func = () => {} inside Document
 }
 
 type UserModel =  Model<UserDocument> & {
-	authenticate(): boolean 											// .statics.func = () => {} inside Model
+	authenticate(password: string, hashedPassword: string): boolean 	// .statics.func = () => {} inside Model
 }
 
 
@@ -29,12 +30,14 @@ const userSchema = new Schema<UserDocument>({
 		lowercase: true,
 		validate: isEmail,
 		required: true,
+		unique: true
 	},
 	password: {
 		type: String,
 		trim: true,
 		lowercase: true,
 		required: true,
+		select: false
 	},
 	confirmPassword: {
 		type: String,
@@ -46,15 +49,35 @@ const userSchema = new Schema<UserDocument>({
 		},
 
 	},
-}, { timestamps: true })
+}, { 
+	timestamps: true,
+	toJSON: {
+		transform: (doc, ret) => { 		// only override object when JSON.stringify( doc ), not doc at all
+			ret.id = ret._id
+			delete ret._id 							// delete after set
+
+			delete ret.password
+			delete ret.__v
+		}
+	}
+})
 
 
-userSchema.methods.comparePassword = function () {
-	return true
+userSchema.pre('save', async function(next) {
+	if( !this.isModified('password') ) return next()
+
+	this.password = await bcryptjs.hash(this.password, 12)
+	this.confirmPassword = undefined
+	next()
+})
+
+
+userSchema.methods.comparePassword = async function(this: UserDocument, password: string ) {
+	console.log(password, this.password)
+	console.log(password === this.password)
+	return await bcryptjs.compare(password, this.password)
 }
-userSchema.statics.authenticateUser = function () {
-	return true
-}
+
 
 // Method-1: 
 const User = model<UserDocument, UserModel>('User', userSchema)
@@ -64,9 +87,3 @@ const User = model<UserDocument, UserModel>('User', userSchema)
 export default User
 
 
-const user = new User({})
-user.comparePassword
-user.email
-// user.emails
-
-User.authenticate() 		

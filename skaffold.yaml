@@ -11,7 +11,7 @@ manifests:
 build:
   local:
     push: false                             # (default) don't push to dockerHub
-    useBuildkit: true                       # To build image lot faster, so must use it
+    # useBuildkit: true                       # To build image lot faster, so must use it
   artifacts:
     - image: javascriptforeverything/auth
       context: auth
@@ -38,7 +38,7 @@ build:
 #       docker:
 #         dockerfile: Dockerfile
 #       sync:                                 # Sync all file 
-#         manual:
-#           - src: 'src/**/*.ts'              # Take all those files 
-#             dest: .                         # put here
-...
+#         # manual:
+#         #   - src: 'src/**/*.ts'              # Take all those files 
+#         #     dest: .                         # put here
+# ...
