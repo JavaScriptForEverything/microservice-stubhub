@@ -108,7 +108,7 @@ export const deleteUserById: RequestHandler = catchAsync( async (req, res, next)
 // POST /api/users/login
 export const login: RequestHandler = catchAsync( async (req, res, next) => {
 	const { email, password } = req.body
-	if(!email || !password) return next(appError('please pass email and password'))
+	if(!email || !password) return next(appError('please pass email and password')) 	
 
 	const user = await User.findOne({ email }).select('+password')
 	if(!user) return next(appError('User Not found', 401, 'AuthError'))
@@ -141,7 +141,7 @@ export const logout: RequestHandler = (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		message: 'you loged out successfully',
+		message: 'you loged out successfully', 		// same text used in test
 		data: null
 	})
 }
