@@ -13,14 +13,21 @@ export const catchAsync = (fn: Fn ) => {
 
 type MyError = Error & {
   message: string;
-  statusCode: number;
-  status: string
+  status: number;
+  statusName: string
 }
 
-export const appError = (message='', statusCode=400, status='error') => {
+// export const appError = (message='', statusCode=400, status='error') => {
+// 	const error = new Error(message) 	as MyError
+// 	error.statusCode = statusCode
+// 	error.status = status
+
+// 	return error
+// }
+export const appError = (message='', status=400, statusName='error') => {
 	const error = new Error(message) 	as MyError
-	error.statusCode = statusCode
 	error.status = status
+	error.statusName = statusName
 
 	return error
 }
@@ -31,9 +38,10 @@ export const globalErrorHandler:ErrorRequestHandler = (err, _req, res, _next) =>
 	const { NODE_ENV = 'development' } = process.env
 
 	if(!err.message) {
-		res.status(err.statusCode || 404).json({
+		res.status(err.status || 400).json({
 			message: err,
-			status: 'unknown',
+			status: err.status || 400,
+			statusName: 'unknown',
 			stack: NODE_ENV === 'development' ? err.stack : undefined
 		})
 	}
@@ -41,13 +49,15 @@ export const globalErrorHandler:ErrorRequestHandler = (err, _req, res, _next) =>
 	// 1. Give simple message for InvalidId Error
 	if(err.name === 'CastError') {
 		err.message = `Invalid ID: ${err.value}`
-		err.status = err.name
+		err.status = err.status || 400
+		err.statusName = err.name
 	}
 
 	// 2. Give simple message for Duplicate (Unique Field) Error
 	if(err.code === 11000) {
 		err.message = `Duplicate Fields: ${err.message.split('index:').pop()}`
-		err.status = err.name
+		err.status = err.status || 400
+		err.statusName = err.name
 	}
 
 	// 3. Give simple message for ValidationError
@@ -58,24 +68,26 @@ export const globalErrorHandler:ErrorRequestHandler = (err, _req, res, _next) =>
 			}
 		})
 		err.message = message
-		err.status = err.name
+		err.status = err.status || 400
+		err.statusName = err.name
 	}
 
 	// 4.1: JsonWebToken Modification Error
   if(err.name === 'JsonWebTokenError') {
-		err.statusCode = 401
-		err.status = err.name
+		err.status = 401
+		err.statusName = err.name
 	}
 	// 4.2: JsonWebToken Expire Error
   if(err.name === 'TokenExpiredError') {
-		err.statusCode = 401
-		err.status = err.name
+		err.status = 401
+		err.statusName = err.name
 	}
 
 
-	res.status(err.statusCode || 404).json({
+	res.status(err.status || 400).json({
 		message: err.message,
-		status: err.status || 'failed',
+		status: err.status || 400,
+		statusName: err.statusName || 'failed',
 		stack: NODE_ENV === 'development' ? err.stack : undefined
 	})
 }

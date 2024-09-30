@@ -68,7 +68,7 @@ export const createUser: RequestHandler = catchAsync( async (req, res, next) => 
 // GET /api/users/:userId
 export const getUserById: RequestHandler = catchAsync( async (req, res, next) => {
 	const user = await User.findById(req.params.userId)
-	if(!user) return next(appError('user not found'))
+	if(!user) return next(appError('user not found', 400))
 
 	res.status(200).json({
 		status: 'success',

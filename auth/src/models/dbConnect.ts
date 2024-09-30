@@ -1,6 +1,6 @@
 import { connect, connection } from 'mongoose'
-// import dotenv from 'dotenv' 					// no need, kubernetes secret handles it in Pod.env
-// dotenv.config()
+import dotenv from 'dotenv' 					// no need, kubernetes secret handles it in Pod.env
+dotenv.config()
 
 
 export const dbConnect = async () => {
