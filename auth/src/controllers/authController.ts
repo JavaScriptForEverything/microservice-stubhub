@@ -107,18 +107,16 @@ export const deleteUserById: RequestHandler = catchAsync( async (req, res, next)
 
 // POST /api/users/login
 export const login: RequestHandler = catchAsync( async (req, res, next) => {
-	const { email='', password='' } = req.body
+	const { email, password } = req.body
 	if(!email || !password) return next(appError('please pass email and password'))
 
 	const user = await User.findOne({ email }).select('+password')
 	if(!user) return next(appError('User Not found', 401, 'AuthError'))
 
 
-
-
-	// // verifyPassword
-	// const isAuthenticated = await user.comparePassword(password)
-	// if(!isAuthenticated) return next(appError('User Not found', 401, 'AuthError'))
+	// verifyPassword
+	const isAuthenticated = await user.comparePassword(password)
+	if(!isAuthenticated) return next(appError('Password incrorrect', 401, 'AuthError'))
 
 	// Generate Token
 	const authToken = await tokenService.generateAuthToken(user.id)

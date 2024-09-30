@@ -1,7 +1,7 @@
 import type { Document, Model} from 'mongoose';
 import { model, models, Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail'
-import * as bcryptjs from 'bcryptjs'
+import bcryptjs from 'bcryptjs'
 
 type UserDocument = Document & {
 	name: string
@@ -9,11 +9,11 @@ type UserDocument = Document & {
 	password: string
 	confirmPassword: string | undefined
 
-	comparePassword: (password: string) => boolean 								// .methods.func = () => {} inside Document
+	comparePassword: (password: string) => Promise<boolean> 								// .methods.func = () => {} inside Document
 }
 
 type UserModel =  Model<UserDocument> & {
-	authenticate(password: string, hashedPassword: string): boolean 	// .statics.func = () => {} inside Model
+	// authenticate(password: string, hashedPassword: string): boolean 	// .statics.func = () => {} inside Model
 }
 
 
@@ -34,15 +34,11 @@ const userSchema = new Schema<UserDocument>({
 	},
 	password: {
 		type: String,
-		trim: true,
-		lowercase: true,
 		required: true,
 		select: false
 	},
 	confirmPassword: {
 		type: String,
-		trim: true,
-		lowercase: true,
 		required: true,
 		validate: function(this: UserDocument, val: string, ) {
 			return this.password === val
@@ -72,10 +68,8 @@ userSchema.pre('save', async function(next) {
 })
 
 
-userSchema.methods.comparePassword = async function(this: UserDocument, password: string ) {
-	console.log(password, this.password)
-	console.log(password === this.password)
-	return await bcryptjs.compare(password, this.password)
+userSchema.methods.comparePassword = function(this: UserDocument, password: string ) {
+	return bcryptjs.compare(password.trim(), this.password)
 }
 
 
