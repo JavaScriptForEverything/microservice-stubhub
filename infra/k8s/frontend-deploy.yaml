@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: javascriptforeverything/ms-frontend:latest
+          image: javascriptforeverything/frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000       # App running on this port
+            - containerPort: 5000       # App running on this port
 ---
 apiVersion: v1
 kind: Service
@@ -29,8 +29,8 @@ spec:
   selector:
     app: frontend                     # (3) target pod to apply service
   ports:
-  - name: 3000-3000
-    targetPort: 3000              # (4) map container pod
-    port: 3000                    # (5) with Cluster node port 
+  - name: 5000-5000
+    targetPort: 5000              # (4) map container pod
+    port: 5000                    # (5) with Cluster node port 
     protocol: TCP
 ...

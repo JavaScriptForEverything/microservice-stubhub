@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import * as pageController from '../controllers/pageController'
 
 export const router = Router()
 
@@ -6,11 +7,4 @@ export const router = Router()
 
 // 	/
 router.route('/')
-	.get((req, res, next) => {
-
-		const payload = {
-			title: 'Home Page'
-		}
-		res.render('home', payload )
-
-	})
+	.get(pageController.home)

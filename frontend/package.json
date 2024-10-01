@@ -9,8 +9,8 @@
     "start": "node .",
     "watch": "yarn prebuild --watch",
     "ts-node-dev": "ts-node-dev src/app.ts",
-    "dev:old": "NODE_ENV=development nodemon src/app.ts --ext js,pug --ignore public",
-    "dev": "concurrently --kill-others \"yarn watch\" \"yarn dev:old\""
+    "dev:only": "nodemon src/app.ts --ext pug --ignore public",
+    "dev": "concurrently --kill-others \"yarn watch\" \"yarn dev:only\""
   },
   "dependencies": {
     "connect-livereload": "^0.6.1",

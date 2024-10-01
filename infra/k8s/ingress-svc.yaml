@@ -26,5 +26,5 @@ spec:
           service:
             name: frontend-svc  # target service.name = frontend-svc to apply
             port:
-              number: 3000      # app running on container and also service mapped to 5000
+              number: 5000      # app running on container and also service mapped to 5000
 ...
