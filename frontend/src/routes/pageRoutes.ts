@@ -6,5 +6,5 @@ export const router = Router()
 
 
 // 	/
-router.route('/')
-	.get(pageController.home)
+router
+	.get('/', pageController.home)
