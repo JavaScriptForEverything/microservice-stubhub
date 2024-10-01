@@ -1,0 +1,36 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "dest/app.js",
+  "license": "MIT",
+  "scripts": {
+    "tailwind": "yarn tailwindcss -i ./src/styles.css -o ./src/public/css/tailwind.css",
+    "tailwind:watch": "yarn tailwind --watch",
+    "dev:only": "ts-node-dev src/app.ts",
+  	"dev:old": "ts-node-dev --respawn --transpile-only --watch ./src --watch ./src/views --watch ./src/views/**/*.pug --ignore ./src/public src/app.ts",
+
+    "dev": "concurrently --kill-others \"yarn tailwind:watch\" \"yarn dev:only\"",
+    "build": "yarn tailwind",
+    "start": "node ."
+  },
+  "dependencies": {
+    "connect-livereload": "^0.6.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "livereload": "^0.9.3",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/connect-livereload": "^0.6.3",
+    "@types/express": "^5.0.0",
+    "@types/livereload": "^0.9.5",
+    "@types/node": "^22.7.4",
+    "autoprefixer": "^10.4.20",
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.0.1",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  }
+}

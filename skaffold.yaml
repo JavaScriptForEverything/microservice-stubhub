@@ -11,7 +11,6 @@ manifests:
 build:
   local:
     push: false                             # (default) don't push to dockerHub
-    # useBuildkit: true                       # To build image lot faster, so must use it
   artifacts:
     - image: javascriptforeverything/auth
       context: auth
@@ -22,23 +21,11 @@ build:
           - src: 'src/**/*.ts'              # Take all those files 
             dest: .                         # put here
 
-# ---
-# apiVersion: skaffold/v2alpha3
-# kind: Config
-# deploy:
-#   kubectl:
-#     manifests:
-#       - ./infra/k8s/*
-# build:
-#   local:
-#     push: false                             # (default) don't push to dockerHub
-#   artifacts:
-#     - context: ./auth                       # will be apply for /auth dir = auth project
-#       image: javascriptforeverything/auth
-#       docker:
-#         dockerfile: Dockerfile
-#       sync:                                 # Sync all file 
-#         # manual:
-#         #   - src: 'src/**/*.ts'              # Take all those files 
-#         #     dest: .                         # put here
-# ...
+    - image: javascriptforeverything/ms-frontend
+      context: frontend
+      docker:
+        dockerfile: Dockerfile
+      sync:                                 # Instead of it, build entire image on every change, now only change updated files
+        manual:
+          - src: '**/*.ts'                  # Take all those files 
+            dest: .                         # put here

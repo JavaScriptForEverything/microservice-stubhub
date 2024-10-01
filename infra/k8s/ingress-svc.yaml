@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: auth-svc            # will be used as dns to access auth service
+  name: ingress-svc            # will be used as dns to access ingress service
   annotations:
     # nginx.ingress.kubernetes.io/use-regex: 'true'       # required for regex
 spec:
@@ -19,4 +19,12 @@ spec:
             name: auth-svc      # target service.name = auth-svc to apply
             port:
               number: 5000      # app running on container and also service mapped to 5000
+
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-svc  # target service.name = frontend-svc to apply
+            port:
+              number: 3000      # app running on container and also service mapped to 5000
 ...

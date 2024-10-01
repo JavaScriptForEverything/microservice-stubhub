@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend                   # (2) select Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: frontend                 # (1) Add label to pod
+    spec:
+      containers:
+        - name: frontend
+          image: javascriptforeverything/ms-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000       # App running on this port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend                     # (3) target pod to apply service
+  ports:
+  - name: 3000-3000
+    targetPort: 3000              # (4) map container pod
+    port: 3000                    # (5) with Cluster node port 
+    protocol: TCP
+...
