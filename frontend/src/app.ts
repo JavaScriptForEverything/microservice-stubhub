@@ -2,27 +2,24 @@ import path from 'node:path'
 import express from 'express'
 import livereload from 'livereload'
 import connectLivereload from 'connect-livereload'
-import dotenv from 'dotenv'
-
 import routes from './routes'
-
-dotenv.config() 	// required for livereload
+import dotenv from 'dotenv'
+dotenv.config() 	
 
 
 const publicDirectory = path.join(process.cwd(), './src/public')
 const app = express()
 
 
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(process.cwd(), './src/views'));
 app.set('view engine', 'pug');
 
 // -----[ For LiveReload ]-----
-// Used for development purpose: To reload browser on file changes
 if(process.env.NODE_ENV === 'development') {
 	const livereloadServer = livereload.createServer() 				// for reload browser
 	livereloadServer.watch(publicDirectory)
 	livereloadServer.server.once('connection', () => {
-		setTimeout(() => livereloadServer.refresh('/') , 300);
+		setTimeout(() => livereloadServer.refresh('/') , 100);
 	})
 
 	app.use(connectLivereload({ 	// add livereload script in front-end to listen 
