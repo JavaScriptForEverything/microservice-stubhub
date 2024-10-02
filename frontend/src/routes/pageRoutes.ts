@@ -7,4 +7,6 @@ export const router = Router()
 
 // 	/
 router
+	.get('/register', pageController.register)
+	.get('/login', pageController.login)
 	.get('/', pageController.home)
