@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-mongo-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets-mongo                   # (2) select Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: tickets-mongo                 # (1) Add label to pod
+    spec:
+      containers:
+        - name: tickets-mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017      # App running on this port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-mongo-svc            # (N) will be used instead of: mongodb://localhost:27017
+spec:
+  type: ClusterIP
+  selector:
+    app: tickets-mongo               # (3) target pod to apply service
+  ports:
+  - name: 27017-27017
+    targetPort: 27017             # (4) map container pod
+    port: 27017                   # (5) with Cluster node port 
+    protocol: TCP
+...

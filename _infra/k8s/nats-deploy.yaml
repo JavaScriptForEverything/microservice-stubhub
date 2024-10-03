@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats                   # (2) select Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: nats                 # (1) Add label to pod
+    spec:
+      containers:
+        - name: nats
+          image: nats-streaming:0.17.0
+          imagePullPolicy: IfNotPresent
+          args: [
+            '--port',           '4222',       # Use port for clients (default: 4222)
+            '--http_port',      '8222',       # Use port for http monitoring
+            '--hb_interval',    '5s',         # HeartBeat Interver of Server
+            '--hb_timeout',     '5s',
+            '--hb_fail_count',  '2',          # number of failed, before server close connection
+            '--cluster_id',     'stubhub'     # Cluster ID (default: test-cluster)
+            '--stan_debug',                   # Enable STAN debugging output
+          ]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: nats                     # (3) target pod to apply service
+  ports:
+  - name: client
+    targetPort: 4222              # (4) map container pod
+    port: 4222                    # (5) with Cluster node port
+    protocol: TCP
+
+  - name: monitoring
+    targetPort: 8222              # (4) map container pod
+    port: 8222                    # (5) with Cluster node port
+    protocol: TCP
+...

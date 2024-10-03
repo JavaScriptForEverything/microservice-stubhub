@@ -3,29 +3,7 @@ import { appError, catchAsync } from './errorController'
 import User from '../models/userModel'
 import * as tokenService from '../services/tokenService'
 
-//-----[ Middleware ]-----
 
-declare global {
-	namespace Express {
-		interface Request {
-			tokenPayload?: tokenService.TokenPayload 	// may or may not exists (un authenticated time)
-		}
-	}
-}
-
-
-// router.get('/api/users' protect, ...)
-export const protect:RequestHandler = catchAsync( async (req, res, next) => {
-	if(!req.session?.authToken) return next(appError( 'you are not logedin user', 401, 'AuthError'))
-	
-	const payload = await tokenService.verifyAuthToken(req.session.authToken)
-	if(!payload) return next(appError( 'yarn token is not valid ', 401, 'AuthError'))
-
-	req.session.userId = payload.id
-	req.tokenPayload = payload
-
-	next()
-})
 
 
 // GET /api/users/me 	=  router.get('/me', protect, getLogedInUser, getUserById)
@@ -80,7 +58,7 @@ export const getUserById: RequestHandler = catchAsync( async (req, res, next) =>
 
 // PATCH 	/api/users/:userId
 export const updateUserById: RequestHandler = catchAsync( async (req, res, next) => {
-	const user = await User.findByIdAndUpdate(req.params.userId, req.body)
+	const user = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true })
 	if(!user) return next(appError('user not found'))
 
 	res.status(200).json({
@@ -113,13 +91,12 @@ export const login: RequestHandler = catchAsync( async (req, res, next) => {
 	const user = await User.findOne({ email }).select('+password')
 	if(!user) return next(appError('User Not found', 401, 'AuthError'))
 
-
 	// verifyPassword
 	const isAuthenticated = await user.comparePassword(password)
 	if(!isAuthenticated) return next(appError('Password incrorrect', 401, 'AuthError'))
 
 	// Generate Token
-	const authToken = await tokenService.generateAuthToken(user.id)
+	const authToken = tokenService.generateAuthToken(user.id)
 
 	// req.session.authToken = authToken 		// => it throw error
 	req.session = { 												// but it works

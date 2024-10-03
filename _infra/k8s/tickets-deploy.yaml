@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets                   # (2) select Pod to apply replicas
+  template:
+    metadata:
+      labels:
+        app: tickets                 # (1) Add label to pod
+    spec:
+      containers:
+        - name: tickets
+          image: javascriptforeverything/tickets:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000       # App running on this port
+          env:
+            - name: MONGO_HOST          # this name will be used to access: process.env.MONGO_HOST
+              value: tickets-mongo-svc     # MONGO_HOST=mongodb://localhost:27017 => mongo service name
+
+            - name: JWT_AUTH_TOKEN_SECRET   
+              value: my-secret-for-dev  
+
+            # - name: JWT_AUTH_TOKEN_SECRET   
+            #   valueFrom:
+            #     secretKeyRef: 
+            #       name: jwt-secret            # kubectl create secret generic jwt-secret --from-literal=JWT_AUTH_TOKEN_SECRET='...'
+            #       key: JWT_AUTH_TOKEN_SECRET  # get value store in JWT_AUTH_TOKEN_SECRET, from 'jwt-secret' name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: tickets                     # (3) target pod to apply service
+  ports:
+  - name: 5000-5000
+    targetPort: 5000              # (4) map container pod
+    port: 5000                    # (5) with Cluster node port 
+    protocol: TCP
+...

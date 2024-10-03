@@ -11,7 +11,6 @@ spec:
   - host: mydomain.com      # echo '127.0.0.1   mydomain.com' | sudo tee -a /etc/hosts
     http:
       paths:
-      # - path: /api/users/?(.*)
       - path: /api/users/
         pathType: Prefix
         backend:
@@ -20,11 +19,19 @@ spec:
             port:
               number: 5000      # app running on container and also service mapped to 5000
 
+      - path: /api/tickets/
+        pathType: Prefix
+        backend:
+          service:
+            name: tickets-svc     
+            port:
+              number: 5000      
+
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: frontend-svc  # target service.name = frontend-svc to apply
+            name: frontend-svc  
             port:
-              number: 5000      # app running on container and also service mapped to 5000
+              number: 5000      
 ...

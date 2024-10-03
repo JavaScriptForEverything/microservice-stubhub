@@ -25,7 +25,16 @@ build:
       context: frontend
       docker:
         dockerfile: Dockerfile
-      sync:                                 # Instead of it, build entire image on every change, now only change updated files
+      sync:                                 
         manual:
-          - src: 'src/**/*.ts'              # Take all those files 
-            dest: .                         # put here
+          - src: 'src/**/*.ts'              
+            dest: .                         
+
+    - image: javascriptforeverything/tickets:latest
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:                                 
+        manual:
+          - src: 'src/**/*.ts'              
+            dest: .                         

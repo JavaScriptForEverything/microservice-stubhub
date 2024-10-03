@@ -10,7 +10,7 @@ dotenv.config()
 const publicDirectory = path.join(process.cwd(), './src/public')
 const app = express()
 
-
+app.set('trust proxy', true) 			// because traffic will in borxy through ingress nginx
 app.set('views', path.join(process.cwd(), './src/views'));
 app.set('view engine', 'pug');
 
@@ -36,7 +36,7 @@ app.use(routes)
 
 const PORT = 5000
 app.listen(PORT, () => {
-	console.log(`server is listening on: http://localhost:${PORT}`)
+	console.log(`frontend-server is listening on: http://localhost:${PORT}`)
 })
 
 
