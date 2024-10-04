@@ -1,0 +1,18 @@
+{
+  "name": "nats-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+  	"publisher": "ts-node-dev --notify=false ./src/publisher.ts",
+  	"nats:pub": "nodemon ./src/publisher.ts",
+  	"listener": "ts-node-dev --notify=false ./src/listener.ts",
+  	"nats:lis": "nodemon ./src/listener.ts"
+  },
+  "dependencies": {
+    "@types/node": "^22.7.4",
+    "node-nats-streaming": "^0.3.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  }
+}

@@ -6,7 +6,7 @@ metadata:
 
 manifests:
   rawYaml:
-    - infra/k8s/*
+    - _infra/k8s/*
 
 build:
   local:
@@ -30,7 +30,7 @@ build:
           - src: 'src/**/*.ts'              
             dest: .                         
 
-    - image: javascriptforeverything/tickets:latest
+    - image: javascriptforeverything/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile

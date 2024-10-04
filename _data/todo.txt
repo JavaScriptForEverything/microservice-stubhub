@@ -1,3 +1,7 @@
 Testing
 	. sending token as middleware failed: accessing protected route on tickets app throw error
 		- reason, can't send cookie, before protect middleware
+
+		Solution-1:
+			Problem with envronment variable, because generate token missing jtw env, but request access from .env
+			

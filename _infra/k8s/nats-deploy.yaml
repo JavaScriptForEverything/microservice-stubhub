@@ -23,7 +23,7 @@ spec:
             '--hb_interval',    '5s',         # HeartBeat Interver of Server
             '--hb_timeout',     '5s',
             '--hb_fail_count',  '2',          # number of failed, before server close connection
-            '--cluster_id',     'stubhub'     # Cluster ID (default: test-cluster)
+            '--cluster_id',     'stubhub',    # Cluster ID (default: test-cluster)
             '--stan_debug',                   # Enable STAN debugging output
           ]
 
@@ -31,7 +31,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nats-svc
+  name: nats-svc                  # (4) used to connect with node-nats-streaming client
 spec:
   type: ClusterIP
   selector:

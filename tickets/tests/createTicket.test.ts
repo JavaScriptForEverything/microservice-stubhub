@@ -39,13 +39,14 @@ describe('POST /api/tickets', () => {
 			price: '300'
 		}
 		const cookie = getCookie()
-		console.log(cookie)
 
 		const res = await supertest(app)
 			.post('/api/tickets')
 			.send(body)
 			.set('Cookie', [cookie]) 		// set cookie as array, in supertest
-			.expect(201)
+			// .expect(201)
+
+		console.log(res.body)
 
 		expect(res.status).toBe(201)
 		expect(res.body.status).toBe('success') 										// comes from backend
